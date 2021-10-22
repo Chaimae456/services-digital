@@ -46,18 +46,27 @@ if (isset($_POST['submit'])) {
     $password = mysqli_real_escape_string($conn, $_POST['password']);
     $password = password_hash($password, PASSWORD_DEFAULT);
    
-   
+    $reqs="select * from users where emailAdress='".$_POST['emailAdress']."'";
+    $resultat=mysqli_query($conn,$reqs);
+ 
+
+ if(mysqli_num_rows($resultat) == 1){
+  echo "compte deja exist essayer de <a href='log-in.php'>log in</a> ";
+ }else{
       
  
         $query= "INSERT INTO users(fullName,emailAdress,password) 
                 VALUES('$fullName','$emailAdress','$password')";
         $result = mysqli_query($conn, $query);
     if ($result == true  ) {
-      echo '<script>window.location.href = "log-in.php";
-        </script>';
-    }else{
-        echo "essayez de saissez votre email correctement";
+      session_start();
+                       $_SESSION['emailAdress']=$_POST['emailAdress'];
+                       header('Location: index.php');
+
+
+
     }
+  }
   }
 
   ?>
